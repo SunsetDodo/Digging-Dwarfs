@@ -5,9 +5,6 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] private float upGravity = 10f;
-    [SerializeField] private float downGravity = 20f;
-
     [SerializeField] private float springCompression;
     [SerializeField] private float compressionSpeed = 1;
     [SerializeField] private float decompressionSpeed = 20;
@@ -16,25 +13,20 @@ public class CharacterMovement : MonoBehaviour
     
     [SerializeField] private float defaultSpringLength = 0.16f;
     [SerializeField] private float minSpringLength = 0.02f;
-
+    [SerializeField] public float dwarfOffset = 0;
 
     [SerializeField] private GameObject pogoBase;
     [SerializeField] private GameObject dwarfBase;
     [SerializeField] private Collider2D pogoTrigger;
     [SerializeField] private Rigidbody2D dwarfRigidbody;
     [SerializeField] private SpriteRenderer dwarfSprite; 
-        
-    [SerializeField] private float defaultColliderOffset = 0.25f;
-    [SerializeField] private float defaultColliderHeight = 0.5f;
-    
     
     [SerializeField] private float maxRotationAngle = 20;
     [SerializeField] private float rotationSpeed = 60;
-    [SerializeField] private float rotationCompressionThreshold = 0.5f;
     [SerializeField] private float rotationFlipAxisThreshold = 1f;
 
     [SerializeField] public bool isPogoEnabled = true;
-    [SerializeField] public float disabledPogoJumpForce = 80;
+    [SerializeField] private float disabledPogoJumpForce = 80;
     
 
     private void HandleInput()
@@ -59,7 +51,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void MoveDwarfBase()
     {
-        dwarfBase.transform.localPosition = new Vector3(0, Mathf.Lerp(defaultSpringLength, minSpringLength, springCompression), 0);
+        dwarfBase.transform.localPosition = new Vector3(0, Mathf.Lerp(defaultSpringLength, minSpringLength, springCompression) + dwarfOffset, 0);
         // dwarfCollider.offset = new Vector2(0,
         //     Mathf.Lerp(defaultColliderOffset, defaultColliderOffset - (defaultSpringLength - minSpringLength) / 2, springCompression));
         // dwarfCollider.size = new Vector2(0.25f,
@@ -69,6 +61,7 @@ public class CharacterMovement : MonoBehaviour
 
     private bool CanJump()
     {
+        // Debug.Log("Can Jump: " + pogoTrigger.IsTouchingLayers(LayerMask.GetMask("Physics")) + " Spring Compression: " + springCompression);
         return pogoTrigger.IsTouchingLayers(LayerMask.GetMask("Physics"))
                && springCompression > springThreshold;
     }
@@ -81,7 +74,7 @@ public class CharacterMovement : MonoBehaviour
         var forceMagnitude = isPogoEnabled ? springForce * springCompression : disabledPogoJumpForce;
         Vector2 forceDirection = (dwarfBase.transform.position - pogoBase.transform.position).normalized; 
         
-        // Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
+        Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
         dwarfRigidbody.AddForce(forceDirection * forceMagnitude);
     }
 

@@ -473,9 +473,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1118978817}
   - component: {fileID: 1118978818}
-  - component: {fileID: 1118978820}
-  - component: {fileID: 1118978819}
   - component: {fileID: 1118978821}
+  - component: {fileID: 1118978819}
+  - component: {fileID: 1118978822}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -491,7 +491,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118978816}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -518,11 +518,12 @@ MonoBehaviour:
   decompressionSpeed: 20
   springForce: 200
   springThreshold: 0.1
-  defaultSpringLength: 0.16
+  defaultSpringLength: 0.15
   minSpringLength: 0.02
+  dwarfOffset: 0
   pogoBase: {fileID: 1887131817}
   dwarfBase: {fileID: 1125383969}
-  pogoTrigger: {fileID: 1887131819}
+  pogoTrigger: {fileID: 1118978822}
   dwarfRigidbody: {fileID: 1118978819}
   dwarfSprite: {fileID: 1405559568}
   defaultColliderOffset: 0.25
@@ -554,22 +555,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &1118978820
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1118978816}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.25}
-  m_Size: {x: 0.25, y: 0.5}
-  m_Direction: 0
 --- !u!114 &1118978821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -583,10 +568,66 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pogoHeads:
-  - offset: 0.08
-    colliderOffset: 0.11
-    sprite: {fileID: -1881335636, guid: f56f678d38afc9647a522c04f9067f49, type: 3}
+  - sprite: {fileID: -1881335636, guid: f56f678d38afc9647a522c04f9067f49, type: 3}
+    offset: -0.09
+    pogoHeadOffset: 0.06
+    characterOffset: -0.01
+    customBehaviour: 1
+  - sprite: {fileID: -1651871979, guid: f56f678d38afc9647a522c04f9067f49, type: 3}
+    offset: -0.08
+    pogoHeadOffset: -0.03
+    characterOffset: 0.03
     customBehaviour: 0
+  - sprite: {fileID: 686474330, guid: f56f678d38afc9647a522c04f9067f49, type: 3}
+    offset: -0.08
+    pogoHeadOffset: 0
+    characterOffset: 0.06
+    customBehaviour: 0
+  - sprite: {fileID: 1348780838, guid: f56f678d38afc9647a522c04f9067f49, type: 3}
+    offset: -0.08
+    pogoHeadOffset: 0
+    characterOffset: 0.06
+    customBehaviour: 2
+  - sprite: {fileID: 1373642367, guid: f56f678d38afc9647a522c04f9067f49, type: 3}
+    offset: -0.08
+    pogoHeadOffset: 0.02
+    characterOffset: 0.08
+    customBehaviour: 3
+  - sprite: {fileID: 187453565, guid: f56f678d38afc9647a522c04f9067f49, type: 3}
+    offset: -0.1
+    pogoHeadOffset: 0.06
+    characterOffset: 0.12
+    customBehaviour: 4
+  - sprite: {fileID: 507378974, guid: f56f678d38afc9647a522c04f9067f49, type: 3}
+    offset: -0.08
+    pogoHeadOffset: 0.12
+    characterOffset: 0.18
+    customBehaviour: 4
+  - sprite: {fileID: -861199697, guid: f56f678d38afc9647a522c04f9067f49, type: 3}
+    offset: -0.08
+    pogoHeadOffset: 0.06
+    characterOffset: 0.12
+    customBehaviour: 4
+  spriteRenderer: {fileID: 545371644}
+  pogoBase: {fileID: 1887131818}
+  characterMovement: {fileID: 1118978818}
+  pogoHead: 0
+--- !u!58 &1118978822
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118978816}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.1
 --- !u!1 &1125383969
 GameObject:
   m_ObjectHideFlags: 0
@@ -5087,7 +5128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1887131818}
-  - component: {fileID: 1887131819}
   m_Layer: 0
   m_Name: Pogo Base
   m_TagString: Untagged
@@ -5112,22 +5152,6 @@ Transform:
   m_Father: {fileID: 1118978817}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &1887131819
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1887131817}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.11}
-  serializedVersion: 2
-  m_Radius: 0.1
 --- !u!1 &1913794955
 GameObject:
   m_ObjectHideFlags: 0
