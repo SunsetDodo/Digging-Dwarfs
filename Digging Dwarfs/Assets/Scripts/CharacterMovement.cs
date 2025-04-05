@@ -31,9 +31,6 @@ public class CharacterMovement : MonoBehaviour
 
     private void HandleInput()
     {
-        if (!CanJump() && Input.GetKeyUp(KeyCode.Mouse1))
-            isPogoEnabled = !isPogoEnabled;
-        
         if (!isPogoEnabled)
         {
             springCompression = 1;
@@ -74,7 +71,7 @@ public class CharacterMovement : MonoBehaviour
         var forceMagnitude = isPogoEnabled ? springForce * springCompression : disabledPogoJumpForce;
         Vector2 forceDirection = (dwarfBase.transform.position - pogoBase.transform.position).normalized; 
         
-        Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
+        // Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
         dwarfRigidbody.AddForce(forceDirection * forceMagnitude);
     }
 

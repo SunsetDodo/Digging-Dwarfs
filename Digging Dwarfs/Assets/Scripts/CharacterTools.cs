@@ -50,10 +50,45 @@ public class CharacterTools : MonoBehaviour
     {
         ChangePogoHead(pogoHead);
     }
+
+    private bool HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            pogoHead = PogoHeads.Jump;
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            pogoHead = PogoHeads.BaseShovel;
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            pogoHead = PogoHeads.IronShovel;
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            pogoHead = PogoHeads.Jetpack;
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            pogoHead = PogoHeads.Bomb;
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+            pogoHead = PogoHeads.Drill;
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+            pogoHead = PogoHeads.Capsule;
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+            pogoHead = PogoHeads.PortalGun;
+
+        return pogoHead != _lastFramePogoHead;
+    }
+    
     
     // Update is called once per frame
     private void Update()
     {
-        ChangePogoHead(pogoHead);
+
+        if (HandleInput())
+            ChangePogoHead(pogoHead);
+        
+        switch (pogoHeads[(int)pogoHead].customBehaviour)
+        {
+            case 1:
+                characterMovement.isPogoEnabled = true;
+                break;
+            default:
+                characterMovement.isPogoEnabled = false;
+                break;
+        }
     }
 }
