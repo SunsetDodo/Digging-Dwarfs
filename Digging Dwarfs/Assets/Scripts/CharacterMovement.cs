@@ -30,12 +30,30 @@ public class CharacterMovement : MonoBehaviour
     
     [SerializeField] private float maxRotationAngle = 20;
     [SerializeField] private float rotationSpeed = 60;
+    [SerializeField] private float rotationCompressionThreshold = 0.5f;
+    [SerializeField] private float rotationFlipAxisThreshold = 1f;
+
+    [SerializeField] public bool isPogoEnabled = true;
+    [SerializeField] public float disabledPogoJumpForce = 80;
     
 
     private void HandleInput()
     {
-        springCompression = Input.GetKey(KeyCode.Space) ? Mathf.Clamp(springCompression + compressionSpeed * Time.deltaTime, 0, 1) : Mathf.Clamp(springCompression - decompressionSpeed * Time.deltaTime, 0, 1);
-        var targetRotation = -Input.GetAxis("Horizontal") * maxRotationAngle;
+        if (!CanJump() && Input.GetKeyUp(KeyCode.Mouse1))
+            isPogoEnabled = !isPogoEnabled;
+        
+        if (!isPogoEnabled)
+        {
+            springCompression = 1;
+        }
+        else
+        {
+            springCompression = Input.GetKey(KeyCode.Mouse0)
+                ? Mathf.Clamp(springCompression + compressionSpeed * Time.deltaTime, 0, 1)
+                : Mathf.Clamp(springCompression - decompressionSpeed * Time.deltaTime, 0, 1);
+        }
+        
+        var targetRotation = -Input.GetAxis("Horizontal") * maxRotationAngle * springCompression;
         pogoBase.transform.rotation = Quaternion.Euler(0, 0, Mathf.LerpAngle(pogoBase.transform.rotation.eulerAngles.z, targetRotation, Time.deltaTime * rotationSpeed));
     }
 
@@ -57,10 +75,10 @@ public class CharacterMovement : MonoBehaviour
     
     private void HandlePhysics()
     {
-        if (!(CanJump() && Input.GetKeyUp(KeyCode.Space)))
+        if (!(CanJump() && Input.GetKeyUp(KeyCode.Mouse0)))
             return;
 
-        var forceMagnitude = springForce * springCompression;
+        var forceMagnitude = isPogoEnabled ? springForce * springCompression : disabledPogoJumpForce;
         Vector2 forceDirection = (dwarfBase.transform.position - pogoBase.transform.position).normalized; 
         
         // Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
@@ -69,7 +87,11 @@ public class CharacterMovement : MonoBehaviour
 
     private void HandleSprite()
     {
-        dwarfSprite.flipX = pogoBase.transform.rotation.eulerAngles.z - 180 < 0;
+        var angle = -Input.GetAxis("Horizontal");
+        if (0 < angle && angle < rotationFlipAxisThreshold)
+            dwarfSprite.flipX = true;
+        if (-rotationFlipAxisThreshold < angle && angle < 0)
+            dwarfSprite.flipX = false;
     }
     
     private void Update()
