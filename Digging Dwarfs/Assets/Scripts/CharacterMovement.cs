@@ -20,34 +20,23 @@ public class CharacterMovement : MonoBehaviour
 
     [SerializeField] private GameObject pogoBase;
     [SerializeField] private GameObject dwarfBase;
-    [SerializeField] private CapsuleCollider2D dwarfCollider;
     [SerializeField] private Collider2D pogoTrigger;
     [SerializeField] private Rigidbody2D dwarfRigidbody;
+    [SerializeField] private SpriteRenderer dwarfSprite; 
         
     [SerializeField] private float defaultColliderOffset = 0.25f;
     [SerializeField] private float defaultColliderHeight = 0.5f;
     
     
-    [SerializeField] private float maxRotationAngle = 30;
+    [SerializeField] private float maxRotationAngle = 20;
     [SerializeField] private float rotationSpeed = 60;
     
-    
-    void Start()
-    {
-        
-    }
 
     private void HandleInput()
     {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            springCompression = Mathf.Clamp(springCompression + compressionSpeed * Time.deltaTime, 0, 1);
-        }
-        else
-        {
-            springCompression = Mathf.Clamp(springCompression - decompressionSpeed * Time.deltaTime, 0, 1);
-            
-        }
+        springCompression = Input.GetKey(KeyCode.Space) ? Mathf.Clamp(springCompression + compressionSpeed * Time.deltaTime, 0, 1) : Mathf.Clamp(springCompression - decompressionSpeed * Time.deltaTime, 0, 1);
+        var targetRotation = -Input.GetAxis("Horizontal") * maxRotationAngle;
+        pogoBase.transform.rotation = Quaternion.Euler(0, 0, Mathf.LerpAngle(pogoBase.transform.rotation.eulerAngles.z, targetRotation, Time.deltaTime * rotationSpeed));
     }
 
     private void MoveDwarfBase()
@@ -68,26 +57,26 @@ public class CharacterMovement : MonoBehaviour
     
     private void HandlePhysics()
     {
-        if (true 
-            && pogoTrigger.IsTouchingLayers(LayerMask.GetMask("Physics")) 
-            && Input.GetKeyUp(KeyCode.Space)
-            && springCompression > springThreshold
+        if (!(CanJump() && Input.GetKeyUp(KeyCode.Space)))
+            return;
 
-            )
-        {
-            float forceMagnitude = springForce * springCompression;
-            Vector2 forceDirection = (dwarfBase.transform.position - pogoBase.transform.position).normalized; 
-            
-            // Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
-            dwarfRigidbody.AddForce(forceDirection * forceMagnitude);
-        }
+        var forceMagnitude = springForce * springCompression;
+        Vector2 forceDirection = (dwarfBase.transform.position - pogoBase.transform.position).normalized; 
+        
+        // Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
+        dwarfRigidbody.AddForce(forceDirection * forceMagnitude);
+    }
+
+    private void HandleSprite()
+    {
+        dwarfSprite.flipX = pogoBase.transform.rotation.eulerAngles.z - 180 < 0;
     }
     
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         HandleInput();
         MoveDwarfBase();
         HandlePhysics();
+        HandleSprite();
     }
 }
