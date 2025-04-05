@@ -17,7 +17,7 @@ struct NoiseLayer
 [Serializable]
 struct GroundTiles
 {
-    public Tile 
+    public Tile bla;
 }
 
 [Serializable]
@@ -36,6 +36,8 @@ struct OreTiles
     public Tile topRightEdge;
     public Tile bottomLeftEdge;
     public Tile bottomRightEdge;
+    public Tile leftRightSides;
+    public Tile topBottomSides;
     public Tile noUpEdge;
     public Tile noDownEdge;
     public Tile noLeftEdge;
@@ -51,6 +53,13 @@ public class WorldGenerator : MonoBehaviour
     
     [SerializeField]
     private List<NoiseLayer> noiseLayers;
+    
+    [SerializeField]
+    private List<OreTiles> ores;
+    [SerializeField]
+    private List<String> oreNames;
+
+    public int oreIndex = 3;
 
     public int GroundHeightAtPosition(int pos)
     {
@@ -66,18 +75,30 @@ public class WorldGenerator : MonoBehaviour
     void Start()
     {
         
-        tiles = new Dictionary<int, Tile>();
-        foreach (var tile in Resources.LoadAll<Tile>("Tiles"))
-        {
-            tiles.Add(int.Parse(tile.name.Split('_')[1]), tile);
-        }
+        // tiles = new Dictionary<int, Tile>();
+        // foreach (var tile in Resources.LoadAll<Tile>("Tiles"))
+        // {
+        //     tiles.Add(int.Parse(tile.name.Split('_')[1]), tile);
+        // }
+        //
+        // for (int x = -10; x < 10; x++)
+        // {
+        //     int height = GroundHeightAtPosition(x);
+        //     Debug.Log("Height for x:" + x + " is " + height);
+        //     tilemap.SetTile(new Vector3Int(x, height, 0), tiles[5]);
+        // }
         
-        for (int x = -10; x < 10; x++)
-        {
-            int height = GroundHeightAtPosition(x);
-            Debug.Log("Height for x:" + x + " is " + height);
-            tilemap.SetTile(new Vector3Int(x, height, 0), tiles[5]);
-        }
+        OreTiles ore = ores[oreIndex];
+        
+        tilemap.SetTile(new Vector3Int(0, 0, 0), ore.center);
+        tilemap.SetTile(new Vector3Int(1, 0, 0), ore.leftEdge);
+        tilemap.SetTile(new Vector3Int(0, 1, 0), ore.bottomEdge);
+        tilemap.SetTile(new Vector3Int(-1, 0, 0), ore.rightEdge);
+        tilemap.SetTile(new Vector3Int(0, -1, 0), ore.topEdge);
+        tilemap.SetTile(new Vector3Int(1, 1, 0), ore.bottomLeftCorner);
+        tilemap.SetTile(new Vector3Int(-1, 1, 0), ore.bottomRightCorner);
+        tilemap.SetTile(new Vector3Int(1, -1, 0), ore.topLeftCorner);
+        tilemap.SetTile(new Vector3Int(-1, -1, 0), ore.topRightCorner);
         
     }
 
