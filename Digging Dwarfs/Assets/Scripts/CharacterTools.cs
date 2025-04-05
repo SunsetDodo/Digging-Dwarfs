@@ -10,7 +10,6 @@ public struct PogoHead
     public float offset;
     public float pogoHeadOffset;
     public float characterOffset;
-    public int customBehaviour;
 }
 
 [Serializable]
@@ -33,6 +32,8 @@ public class CharacterTools : MonoBehaviour
     [SerializeField] private Transform pogoBase;
     [SerializeField] private CharacterMovement characterMovement;
     
+    [SerializeField] private List<MonoBehaviour> pogoHeadBehaviours;
+    
     [SerializeField] private PogoHeads pogoHead;
 
     private PogoHeads _lastFramePogoHead;
@@ -49,6 +50,7 @@ public class CharacterTools : MonoBehaviour
     private void Start()
     {
         ChangePogoHead(pogoHead);
+        EnableBehaviour((int)pogoHead);
     }
 
     private bool HandleInput()
@@ -72,23 +74,24 @@ public class CharacterTools : MonoBehaviour
 
         return pogoHead != _lastFramePogoHead;
     }
-    
+
+    private void EnableBehaviour(int index)
+    {
+        characterMovement.isPogoEnabled = false;
+        foreach (var behaviour in pogoHeadBehaviours)
+            behaviour.enabled = false;
+        
+        if (index == 0)
+            characterMovement.isPogoEnabled = true;
+        else
+            pogoHeadBehaviours[index - 1].enabled = true;
+    }
     
     // Update is called once per frame
     private void Update()
     {
-
-        if (HandleInput())
-            ChangePogoHead(pogoHead);
-        
-        switch (pogoHeads[(int)pogoHead].customBehaviour)
-        {
-            case 1:
-                characterMovement.isPogoEnabled = true;
-                break;
-            default:
-                characterMovement.isPogoEnabled = false;
-                break;
-        }
+        if (!HandleInput()) return;
+        ChangePogoHead(pogoHead);
+        EnableBehaviour((int)pogoHead);
     }
 }

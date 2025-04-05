@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class IronPogoHead : MonoBehaviour
+public class BasePogoHead : MonoBehaviour
 {
     
     [SerializeField] private float velocityMagnitudeThreshold = 0.1f;
-    [SerializeField] private float breakTileVelocityThreshold = 3.2f;
+    [SerializeField] private float breakTileVelocityThreshold = 2.0f;
     
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private Transform pogoBase;
@@ -59,15 +59,9 @@ public class IronPogoHead : MonoBehaviour
     {
         if (!(_velocityCache > breakTileVelocityThreshold)) return;
         Debug.Log("Breaking tile" + _velocityCache);
-        for (var x = -1; x <= 1; x++)
-        {
-            for (var y = -1; y <= 1; y++)
-            {
-                var closestTile = GetClosestNonNullTile(collision.contacts[0].point);
-                if (!closestTile.HasValue) return;
-                tilemap.SetTile(closestTile.Value, null);
-            }
-        }
+        var closestTile = GetClosestNonNullTile(collision.contacts[0].point);
+        if (!closestTile.HasValue) return;
+        tilemap.SetTile(closestTile.Value, null);
         _velocityCache = 0;
     }
 }

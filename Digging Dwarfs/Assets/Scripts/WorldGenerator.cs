@@ -102,6 +102,8 @@ public class WorldGenerator : MonoBehaviour
         // tilemap.SetTile(new Vector3Int(3, -1, 0), ore.leftRightSides);
         // tilemap.SetTile(new Vector3Int(3, 1, 0), ore.topBottomSides);
         //
+        
+        // tilemap.SetTile(new Vector3Int(0, 0, 0), ores[0].center);
     }
 
     // Update is called once per frame

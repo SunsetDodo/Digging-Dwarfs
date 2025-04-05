@@ -476,6 +476,7 @@ GameObject:
   - component: {fileID: 1118978821}
   - component: {fileID: 1118978819}
   - component: {fileID: 1118978822}
+  - component: {fileID: 1118978823}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -511,8 +512,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8127006c76ffa0841bd1d568c57251ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upGravity: 10
-  downGravity: 20
   springCompression: 0
   compressionSpeed: 1
   decompressionSpeed: 20
@@ -526,14 +525,11 @@ MonoBehaviour:
   pogoTrigger: {fileID: 1118978822}
   dwarfRigidbody: {fileID: 1118978819}
   dwarfSprite: {fileID: 1405559568}
-  defaultColliderOffset: 0.25
-  defaultColliderHeight: 0.5
   maxRotationAngle: 20
   rotationSpeed: 30
-  rotationCompressionThreshold: 0.5
   rotationFlipAxisThreshold: 1
   isPogoEnabled: 0
-  disabledPogoJumpForce: 100
+  disabledPogoJumpForce: 60
 --- !u!50 &1118978819
 Rigidbody2D:
   serializedVersion: 4
@@ -628,6 +624,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.1
+--- !u!114 &1118978823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118978816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1563438465879a41904973d0d3211f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocityMagnitudeThreshold: 0.1
 --- !u!1 &1125383969
 GameObject:
   m_ObjectHideFlags: 0
