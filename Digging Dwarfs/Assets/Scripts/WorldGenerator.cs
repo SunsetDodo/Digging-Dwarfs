@@ -90,15 +90,17 @@ public class WorldGenerator : MonoBehaviour
         
         OreTiles ore = ores[oreIndex];
         
-        tilemap.SetTile(new Vector3Int(0, 0, 0), ore.center);
-        tilemap.SetTile(new Vector3Int(1, 0, 0), ore.leftEdge);
-        tilemap.SetTile(new Vector3Int(0, 1, 0), ore.bottomEdge);
-        tilemap.SetTile(new Vector3Int(-1, 0, 0), ore.rightEdge);
-        tilemap.SetTile(new Vector3Int(0, -1, 0), ore.topEdge);
-        tilemap.SetTile(new Vector3Int(1, 1, 0), ore.bottomLeftCorner);
-        tilemap.SetTile(new Vector3Int(-1, 1, 0), ore.bottomRightCorner);
-        tilemap.SetTile(new Vector3Int(1, -1, 0), ore.topLeftCorner);
-        tilemap.SetTile(new Vector3Int(-1, -1, 0), ore.topRightCorner);
+        // tilemap.SetTile(new Vector3Int(0, 0, 0), ore.center);
+        tilemap.SetTile(new Vector3Int(1, 0, 0), ore.noLeftEdge);
+        tilemap.SetTile(new Vector3Int(0, 1, 0), ore.noDownEdge);
+        tilemap.SetTile(new Vector3Int(-1, 0, 0), ore.noRightEdge);
+        tilemap.SetTile(new Vector3Int(0, -1, 0), ore.noUpEdge);
+        tilemap.SetTile(new Vector3Int(1, 1, 0), ore.bottomLeftEdge);
+        tilemap.SetTile(new Vector3Int(-1, 1, 0), ore.bottomRightEdge);
+        tilemap.SetTile(new Vector3Int(1, -1, 0), ore.topLeftEdge);
+        tilemap.SetTile(new Vector3Int(-1, -1, 0), ore.topRightEdge);
+        tilemap.SetTile(new Vector3Int(3, -1, 0), ore.leftRightSides);
+        tilemap.SetTile(new Vector3Int(3, 1, 0), ore.topBottomSides);
         
     }
 
