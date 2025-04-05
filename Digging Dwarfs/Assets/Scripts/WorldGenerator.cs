@@ -75,33 +75,33 @@ public class WorldGenerator : MonoBehaviour
     void Start()
     {
         
-        // tiles = new Dictionary<int, Tile>();
-        // foreach (var tile in Resources.LoadAll<Tile>("Tiles"))
-        // {
-        //     tiles.Add(int.Parse(tile.name.Split('_')[1]), tile);
-        // }
-        //
-        // for (int x = -10; x < 10; x++)
-        // {
-        //     int height = GroundHeightAtPosition(x);
-        //     Debug.Log("Height for x:" + x + " is " + height);
-        //     tilemap.SetTile(new Vector3Int(x, height, 0), tiles[5]);
-        // }
+        tiles = new Dictionary<int, Tile>();
+        foreach (var tile in Resources.LoadAll<Tile>("Tiles"))
+        {
+            tiles.Add(int.Parse(tile.name.Split('_')[1]), tile);
+        }
+        
+        for (int x = -10; x < 10; x++)
+        {
+            int height = GroundHeightAtPosition(x);
+            // Debug.Log("Height for x:" + x + " is " + height);
+            tilemap.SetTile(new Vector3Int(x, height, 0), tiles[5]);
+        }
         
         OreTiles ore = ores[oreIndex];
         
         // tilemap.SetTile(new Vector3Int(0, 0, 0), ore.center);
-        tilemap.SetTile(new Vector3Int(1, 0, 0), ore.noLeftEdge);
-        tilemap.SetTile(new Vector3Int(0, 1, 0), ore.noDownEdge);
-        tilemap.SetTile(new Vector3Int(-1, 0, 0), ore.noRightEdge);
-        tilemap.SetTile(new Vector3Int(0, -1, 0), ore.noUpEdge);
-        tilemap.SetTile(new Vector3Int(1, 1, 0), ore.bottomLeftEdge);
-        tilemap.SetTile(new Vector3Int(-1, 1, 0), ore.bottomRightEdge);
-        tilemap.SetTile(new Vector3Int(1, -1, 0), ore.topLeftEdge);
-        tilemap.SetTile(new Vector3Int(-1, -1, 0), ore.topRightEdge);
-        tilemap.SetTile(new Vector3Int(3, -1, 0), ore.leftRightSides);
-        tilemap.SetTile(new Vector3Int(3, 1, 0), ore.topBottomSides);
-        
+        // tilemap.SetTile(new Vector3Int(1, 0, 0), ore.noLeftEdge);
+        // tilemap.SetTile(new Vector3Int(0, 1, 0), ore.noDownEdge);
+        // tilemap.SetTile(new Vector3Int(-1, 0, 0), ore.noRightEdge);
+        // tilemap.SetTile(new Vector3Int(0, -1, 0), ore.noUpEdge);
+        // tilemap.SetTile(new Vector3Int(1, 1, 0), ore.bottomLeftEdge);
+        // tilemap.SetTile(new Vector3Int(-1, 1, 0), ore.bottomRightEdge);
+        // tilemap.SetTile(new Vector3Int(1, -1, 0), ore.topLeftEdge);
+        // tilemap.SetTile(new Vector3Int(-1, -1, 0), ore.topRightEdge);
+        // tilemap.SetTile(new Vector3Int(3, -1, 0), ore.leftRightSides);
+        // tilemap.SetTile(new Vector3Int(3, 1, 0), ore.topBottomSides);
+        //
     }
 
     // Update is called once per frame
