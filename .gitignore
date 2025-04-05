@@ -74,3 +74,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 Digging Dwarfs/Library
 Digging Dwarfs/Temp
+Digging Dwarfs/.idea
+Digging Dwarfs/Logs
+Digging Dwarfs/obj
+Digging Dwarfs/UserSettings
