@@ -13,7 +13,6 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float decompressionSpeed = 20;
     [SerializeField] private float springForce = 10;
     [SerializeField] private float springThreshold = 0.1f;
-    [SerializeField] private float forceTimeThreshold = 0.1f;
     
     [SerializeField] private float defaultSpringLength = 0.16f;
     [SerializeField] private float minSpringLength = 0.02f;
@@ -31,8 +30,7 @@ public class CharacterMovement : MonoBehaviour
     
     [SerializeField] private float maxRotationAngle = 30;
     [SerializeField] private float rotationSpeed = 60;
-
-    private float currentForceTimeout = 0;
+    
     
     void Start()
     {
@@ -61,26 +59,27 @@ public class CharacterMovement : MonoBehaviour
         //     Mathf.Lerp(defaultColliderHeight, defaultColliderHeight - (defaultSpringLength - minSpringLength), springCompression));
     }
 
+
+    private bool CanJump()
+    {
+        return pogoTrigger.IsTouchingLayers(LayerMask.GetMask("Physics"))
+               && springCompression > springThreshold;
+    }
+    
     private void HandlePhysics()
     {
         if (true 
             && pogoTrigger.IsTouchingLayers(LayerMask.GetMask("Physics")) 
-            && !Input.GetKey(KeyCode.Space) 
+            && Input.GetKeyUp(KeyCode.Space)
             && springCompression > springThreshold
-            && currentForceTimeout <= 0
+
             )
         {
-            currentForceTimeout = forceTimeThreshold;
             float forceMagnitude = springForce * springCompression;
-            Vector2 forceDirection = dwarfBase.transform.position - pogoBase.transform.position; 
+            Vector2 forceDirection = (dwarfBase.transform.position - pogoBase.transform.position).normalized; 
             
-            Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
+            // Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
             dwarfRigidbody.AddForce(forceDirection * forceMagnitude);
-        }
-        
-        if (currentForceTimeout > 0)
-        {
-            currentForceTimeout -= Time.deltaTime;
         }
     }
     
