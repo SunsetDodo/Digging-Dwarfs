@@ -21,10 +21,11 @@ public enum PogoHeads {
     Bomb,
     Drill,
     Capsule,
-    PortalGun
+    PortalGun,
+    Rock
 }
 
-public class CharacterTools : MonoBehaviour
+public class CharacterTools : MonoBehaviour 
 {
     public List<PogoHead> pogoHeads;
        
@@ -71,6 +72,8 @@ public class CharacterTools : MonoBehaviour
             pogoHead = PogoHeads.Capsule;
         if (Input.GetKeyDown(KeyCode.Alpha8))
             pogoHead = PogoHeads.PortalGun;
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+            pogoHead = PogoHeads.Rock;
 
         return pogoHead != _lastFramePogoHead;
     }
@@ -79,8 +82,11 @@ public class CharacterTools : MonoBehaviour
     {
         characterMovement.isPogoEnabled = false;
         foreach (var behaviour in pogoHeadBehaviours)
+        {
+            if (!behaviour) continue;
             behaviour.enabled = false;
-        
+        }
+
         if (index == 0)
             characterMovement.isPogoEnabled = true;
         else
@@ -90,6 +96,7 @@ public class CharacterTools : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        // HandleInput();
         if (!HandleInput()) return;
         ChangePogoHead(pogoHead);
         EnableBehaviour((int)pogoHead);
