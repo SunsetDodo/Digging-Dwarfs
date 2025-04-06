@@ -13,6 +13,15 @@ public class RockBehaviour : MonoBehaviour
     [SerializeField] private CharacterMovement characterMovement;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+
+    public float pickaxeStrength = 10;
+    public int pickaxeReach = 3;
+    public int pickaxeRadius = 1;
+
+    [SerializeField]
+    private float _pressTime = 0;
+    private Vector3 _lastFrameTile = Vector3.zero;
+    
     private void Start()
     {
         _camera = Camera.main;
@@ -24,6 +33,7 @@ public class RockBehaviour : MonoBehaviour
         characterMovement.enabled = false;
         spriteRenderer.flipX = false;
         spriteRenderer.transform.localPosition = new Vector3(0, 0.01f, 0);
+        spriteRenderer.transform.parent.localPosition = new Vector3(0, 0.14f, 0);
     }
 
     private void OnDisable()
@@ -41,6 +51,20 @@ public class RockBehaviour : MonoBehaviour
         var gridPosition = tilemap.GetCellCenterWorld(cellPosition);
 
         cursor.gameObject.SetActive(tilemap.GetTile(cellPosition));
+        
         cursor.position = gridPosition;
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) || (_lastFrameTile != gridPosition && tilemap.GetTile(cellPosition)))
+            _pressTime = 10 / pickaxeStrength;
+
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            _pressTime -= Time.deltaTime;
+            if (_pressTime <= 0)
+            {
+                tilemap.SetTile(cellPosition, null);
+            }
+        }
+        _lastFrameTile = gridPosition;
     }
 }

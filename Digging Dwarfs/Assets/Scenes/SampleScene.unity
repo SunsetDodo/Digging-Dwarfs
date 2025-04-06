@@ -306,6 +306,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -379,6 +380,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b270ab0fbc996e849963998abe0ee92d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1118978817}
+  playerRB: {fileID: 1118978819}
+  zoomSmoothness: 0
+  minFOV: 1
+  maxFOV: 2
+  movementSmoothness: 0.5
 --- !u!1 &545371642
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +550,7 @@ MonoBehaviour:
   rotationSpeed: 30
   rotationFlipAxisThreshold: 1
   isPogoEnabled: 0
-  disabledPogoJumpForce: 60
+  disabledPogoJumpForce: 100
 --- !u!50 &1118978819
 Rigidbody2D:
   serializedVersion: 4
@@ -663,6 +682,10 @@ MonoBehaviour:
   cursor: {fileID: 1360676586}
   characterMovement: {fileID: 1118978818}
   spriteRenderer: {fileID: 1405559568}
+  pickaxeStrength: 10
+  pickaxeReach: 3
+  pickaxeRadius: 1
+  _pressTime: 0
 --- !u!114 &1118978825
 MonoBehaviour:
   m_ObjectHideFlags: 0
