@@ -5,10 +5,11 @@ using UnityEngine;
 public class FollowCamera : MonoBehaviour
 {
     [SerializeField] private Transform camera;
-
+    [SerializeField] private float maxHeight;
+    
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(camera.position.x, transform.position.y, transform.position.z);
+        transform.position = new Vector3(camera.position.x, Mathf.Min(camera.position.y, maxHeight), transform.position.z);
     }
 }

@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using Random = System.Random;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -31,9 +34,33 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] public bool isPogoEnabled = true;
     [SerializeField] private float disabledPogoJumpForce = 80;
     
+    [SerializeField] private Tilemap tilemap;
+    [SerializeField] private Tile respawnTile;
+    [SerializeField] private Tile deathTile;
+    [SerializeField] private Tile superJumpTile;
+    [SerializeField] private Tile finishTile1;
+    [SerializeField] private Tile finishTile2;
+    [SerializeField] private Tile finishTile3;
+
+    [SerializeField] private bool ignoreRespawnPoint;
+    [SerializeField] private GameObject respawnPoint;
+    [SerializeField] private GameObject gameOverCanvas;
+    
+    private AudioSource[] audioSources;
+    private Random random = new Random();
+
+    private bool superJumpCharged;
+
+    private void Start()
+    {
+        audioSources = GetComponents<AudioSource>();
+    }
 
     private void HandleInput()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+            transform.position = respawnPoint.transform.position;
+        
         if (!isPogoEnabled)
         {
             springCompression = 1;
@@ -72,12 +99,15 @@ public class CharacterMovement : MonoBehaviour
         
         if (!(CanJump() && Input.GetKeyUp(KeyCode.Mouse0)))
             return;
-
-        var forceMagnitude = isPogoEnabled ? springForce * springCompression : disabledPogoJumpForce;
-        Vector2 forceDirection = (dwarfBase.transform.position - pogoBase.transform.position).normalized; 
         
+        var forceMagnitude = isPogoEnabled ? springForce * springCompression * (superJumpCharged ? 2 : 1) : disabledPogoJumpForce;
+        Vector2 forceDirection = (dwarfBase.transform.position - pogoBase.transform.position).normalized; 
+        superJumpCharged = false;
         // Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
         dwarfRigidbody.AddForce(forceDirection * forceMagnitude);
+        
+        var index = random.Next(0, audioSources.Length);
+        audioSources[index].Play();
     }
 
     private void HandleSprite()
@@ -95,5 +125,35 @@ public class CharacterMovement : MonoBehaviour
         MoveDwarfBase();
         HandlePhysics();
         HandleSprite();
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        foreach (var contact in other.contacts)
+        {
+            var touchingTile = tilemap.GetTile(tilemap.WorldToCell(contact.point));
+            if (touchingTile == null) return;
+
+            if (touchingTile == respawnTile)
+            {
+                respawnPoint.transform.position = contact.point + 2 * Vector2.up;
+            }
+
+            if (touchingTile == deathTile)
+            {
+                transform.position = respawnPoint.transform.position;
+            }
+
+            if (touchingTile == superJumpTile)
+            {
+                superJumpCharged = true;
+            }
+
+            if (touchingTile == finishTile1 || touchingTile == finishTile2 || touchingTile == finishTile3)
+            {
+                gameOverCanvas.SetActive(true);
+                enabled = false;
+            }
+        }
     }
 }
