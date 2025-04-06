@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,16 +12,30 @@ public class IronPogoHead : MonoBehaviour
     
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private Transform pogoBase;
+
+    [SerializeField] private WorldGenerator worldGenerator;
+    [SerializeField] private Inventory inventory;
     
     private Rigidbody2D _rigidbody;
     private float _velocityCache;
+
+    private bool _canDestroy;
+
+    private void OnEnable()
+    {
+        _canDestroy = true;
+    }
     
+    private void OnDisable()
+    {
+        _canDestroy = false;
+    }
+
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        Debug.Log("Started");
     }
-
+    
 
     private void FixedUpdate()
     {
@@ -57,6 +72,7 @@ public class IronPogoHead : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!_canDestroy) return;
         if (!(_velocityCache > breakTileVelocityThreshold)) return;
         Debug.Log("Breaking tile" + _velocityCache);
         for (var x = -1; x <= 1; x++)
@@ -65,9 +81,15 @@ public class IronPogoHead : MonoBehaviour
             {
                 var closestTile = GetClosestNonNullTile(collision.contacts[0].point);
                 if (!closestTile.HasValue) return;
+                var oreIndex = worldGenerator.OreIndex(closestTile.Value);
+                Debug.Log(oreIndex);
                 tilemap.SetTile(closestTile.Value, null);
+                
+                if (oreIndex == -1) continue;
+                inventory.AddStone(1, oreIndex);
             }
         }
+        _rigidbody.velocity = Vector2.zero;
         _velocityCache = 0;
     }
 }

@@ -5,6 +5,9 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     // Start is called before the first frame update
+    [SerializeField] private float downGravity = 4;
+    [SerializeField] private float upGravity = 3;
+    
     [SerializeField] private float springCompression;
     [SerializeField] private float compressionSpeed = 1;
     [SerializeField] private float decompressionSpeed = 20;
@@ -65,6 +68,8 @@ public class CharacterMovement : MonoBehaviour
     
     private void HandlePhysics()
     {
+        dwarfRigidbody.gravityScale = dwarfRigidbody.velocity.y < 0 ? downGravity : upGravity;
+        
         if (!(CanJump() && Input.GetKeyUp(KeyCode.Mouse0)))
             return;
 

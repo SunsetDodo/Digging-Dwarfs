@@ -11,6 +11,8 @@ public class BasePogoHead : MonoBehaviour
     
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private Transform pogoBase;
+    [SerializeField] private WorldGenerator worldGenerator;
+    [SerializeField] private Inventory inventory;
     
     private Rigidbody2D _rigidbody;
     private float _velocityCache;
@@ -18,7 +20,6 @@ public class BasePogoHead : MonoBehaviour
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        Debug.Log("Started");
     }
 
 
@@ -61,7 +62,12 @@ public class BasePogoHead : MonoBehaviour
         Debug.Log("Breaking tile" + _velocityCache);
         var closestTile = GetClosestNonNullTile(collision.contacts[0].point);
         if (!closestTile.HasValue) return;
+        var oreIndex = worldGenerator.OreIndex(closestTile.Value);
         tilemap.SetTile(closestTile.Value, null);
         _velocityCache = 0;
+        
+        if (oreIndex == -1) return;
+        inventory.AddStone(1, oreIndex);
+        
     }
 }

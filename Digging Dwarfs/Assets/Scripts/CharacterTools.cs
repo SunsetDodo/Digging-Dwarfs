@@ -96,8 +96,8 @@ public class CharacterTools : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        // HandleInput();
-        if (!HandleInput()) return;
+        HandleInput();
+        // if (!HandleInput()) return;
         ChangePogoHead(pogoHead);
         EnableBehaviour((int)pogoHead);
     }
