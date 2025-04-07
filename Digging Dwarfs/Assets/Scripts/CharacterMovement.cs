@@ -168,6 +168,8 @@ public class CharacterMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        maxCompression = 0;
+        
         foreach (var contact in collision.contacts)
         {
             var touchingTile = tilemap.GetTile(tilemap.WorldToCell(contact.point));
