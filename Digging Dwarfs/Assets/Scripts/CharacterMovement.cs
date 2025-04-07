@@ -13,6 +13,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float upGravity = 3;
     
     [SerializeField] private float springCompression;
+    private float maxCompression;
     [SerializeField] private float compressionSpeed = 1;
     [SerializeField] private float decompressionSpeed = 20;
     [SerializeField] private float springForce = 10;
@@ -56,6 +57,7 @@ public class CharacterMovement : MonoBehaviour
     private Random random = new Random();
 
     private bool superJumpCharged;
+    private bool jumped;
 
     private void Start()
     {
@@ -78,10 +80,19 @@ public class CharacterMovement : MonoBehaviour
             springCompression = Input.GetKey(KeyCode.Mouse0)
                 ? Mathf.Clamp(springCompression + compressionSpeed * Time.deltaTime, 0, 1)
                 : Mathf.Clamp(springCompression - decompressionSpeed * Time.deltaTime, 0, 1);
+            if (springCompression > maxCompression)
+            {
+                maxCompression = springCompression;
+            }
         }
         
         var targetRotation = -Input.GetAxis("Horizontal") * maxRotationAngle * springCompression;
         pogoBase.transform.rotation = Quaternion.Euler(0, 0, Mathf.LerpAngle(pogoBase.transform.rotation.eulerAngles.z, targetRotation, Time.deltaTime * rotationSpeed));
+        
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            jumped = true;
+        }
     }
 
     private void MoveDwarfBase()
@@ -104,14 +115,16 @@ public class CharacterMovement : MonoBehaviour
     private void HandlePhysics()
     {
         dwarfRigidbody.gravityScale = dwarfRigidbody.velocity.y < 0 ? downGravity : upGravity;
+        if (!jumped) return;
         
-        if (!(CanJump() && Input.GetKeyUp(KeyCode.Mouse0)))
-            return;
+        jumped = false;
+        var compression = maxCompression;
+        maxCompression = 0;
+        if (!CanJump()) return;
         
-        var forceMagnitude = isPogoEnabled ? springForce * springCompression * (superJumpCharged ? 2 : 1) : disabledPogoJumpForce;
+        var forceMagnitude = isPogoEnabled ? springForce * compression * (superJumpCharged ? 2 : 1) : disabledPogoJumpForce;
         Vector2 forceDirection = (dwarfBase.transform.position - pogoBase.transform.position).normalized; 
         superJumpCharged = false;
-        // Debug.Log("Force Direction: " + forceMagnitude * forceDirection);
         dwarfRigidbody.AddForce(forceDirection * forceMagnitude);
         
         var index = random.Next(0, audioSources.Length);
@@ -142,11 +155,15 @@ public class CharacterMovement : MonoBehaviour
     {
         HandleInput();
         MoveDwarfBase();
-        HandlePhysics();
-        HandleSprite();
         
         _timer += Time.deltaTime;
         timer.text = FormatTime(_timer);
+    }
+
+    private void FixedUpdate()
+    {
+        HandlePhysics();
+        HandleSprite();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
