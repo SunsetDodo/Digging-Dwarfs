@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = System.Random;
@@ -45,7 +46,12 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private bool ignoreRespawnPoint;
     [SerializeField] private GameObject respawnPoint;
     [SerializeField] private GameObject gameOverCanvas;
+    [SerializeField] private TextMeshProUGUI timer;
+    [SerializeField] private TextMeshProUGUI gameOverTimer;
+
+    private float _timer;
     
+    private Collider2D dwarfCollider;
     private AudioSource[] audioSources;
     private Random random = new Random();
 
@@ -54,6 +60,8 @@ public class CharacterMovement : MonoBehaviour
     private void Start()
     {
         audioSources = GetComponents<AudioSource>();
+        dwarfCollider = GetComponent<Collider2D>();
+        _timer = 0;
     }
 
     private void HandleInput()
@@ -119,17 +127,31 @@ public class CharacterMovement : MonoBehaviour
             dwarfSprite.flipX = false;
     }
     
+    public static string FormatTime(float timeInSeconds)
+    {
+        int hours = (int)(timeInSeconds / 3600);
+        int minutes = (int)((timeInSeconds % 3600) / 60);
+        int seconds = (int)(timeInSeconds % 60);
+        int milliseconds = (int)((timeInSeconds - Mathf.Floor(timeInSeconds)) * 100);
+
+        return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", hours, minutes, seconds, milliseconds);
+    }
+    
+    
     private void Update()
     {
         HandleInput();
         MoveDwarfBase();
         HandlePhysics();
         HandleSprite();
+        
+        _timer += Time.deltaTime;
+        timer.text = FormatTime(_timer);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        foreach (var contact in other.contacts)
+        foreach (var contact in collision.contacts)
         {
             var touchingTile = tilemap.GetTile(tilemap.WorldToCell(contact.point));
             if (touchingTile == null) return;
@@ -152,6 +174,8 @@ public class CharacterMovement : MonoBehaviour
             if (touchingTile == finishTile1 || touchingTile == finishTile2 || touchingTile == finishTile3)
             {
                 gameOverCanvas.SetActive(true);
+                gameOverTimer.text = "And it only took: " + FormatTime(_timer);
+                timer.gameObject.SetActive(false);
                 enabled = false;
             }
         }
